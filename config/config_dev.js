@@ -5,6 +5,8 @@ module.exports = {
 
 
     COMPANY_NAME:"DevOps Genesis",
+    COMPANY_COVER_IMAGE:"https://hub.packtpub.com/wp-content/uploads/2018/03/264-cover-image.png",
+    COMPANY_LOGO:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Devops-toolchain.svg/220px-Devops-toolchain.svg.png",
 
     DB_URL:'mongodb://localhost:27017/email',
 

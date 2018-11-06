@@ -21,15 +21,34 @@ const mailer = {
         var text = "";
         var htmlBody = "";
         var subject = "";
+        var dataInput = {};
         switch(type){
             case "query":
 
                 to = data.to;
                 subject = data.subject || emailConfg.query.subject;
-                data["text"] = data.text || emailConfg.query.text;
+                dataInput["text"] = data.text || emailConfg.query.text;
+                if(data.config){
+                    dataInput["coverImage"] = data.config.coverImage || config.COMPANY_COVER_IMAGE;
+                    dataInput["heading"] = data.config.heading;
+                    data.config.img1 ? 
+                    (dataInput["img1"] = data.config.img1)
+                    :
+                    (
+                        console.log("No Image")
+                    );
+                    data.config.img2 ? 
+                    (dataInput["img2"] = data.config.img2)
+                    :
+                    (
+                        console.log("No Image")
 
-                text = data["text"];
-                htmlBody = EMAIL_QUERY( data );
+                    );
+
+                }
+                dataInput["logo"] = config.COMPANY_LOGO;
+                text = dataInput["text"];
+                htmlBody = EMAIL_QUERY( dataInput );
                 that.sendMail(to, subject, text, htmlBody);
                 break;
             case "followUp" :
@@ -37,16 +56,54 @@ const mailer = {
                 to = data.to;
                 subject = emailConfg.followUp.subject;
                 data["text"] = data.text || emailConfg.followUp.text;
-                
-                htmlBody = EMAIL_FOLLOWUP( data );
+                if(data.config){
+                    dataInput["coverImage"] = data.config.coverImage || config.COMPANY_COVER_IMAGE;
+                    dataInput["heading"] = data.config.heading;
+                    data.config.img1 ? 
+                    (dataInput["img1"] = data.config.img1)
+                    :
+                    (
+                        console.log("No Image")
+                    );
+                    data.config.img2 ? 
+                    (dataInput["img2"] = data.config.img2)
+                    :
+                    (
+                        console.log("No Image")
+
+                    );
+
+                }
+                dataInput["logo"] = config.COMPANY_LOGO;
+                text = dataInput["text"];
+                htmlBody = EMAIL_FOLLOWUP( dataInput );
                 that.sendMail(to, subject, text, htmlBody);
                 break;
             case "promotionalOffer":
                 to = data.to;
                 subject = emailConfg.followUp.subject;
                 data["text"] = data.text || emailConfg.followUp.text;
-                
-                htmlBody = EMAIL_PROMOTIONAL_OFFER( data );
+                if(data.config){
+                    dataInput["coverImage"] = data.config.coverImage || config.COMPANY_COVER_IMAGE;
+                    dataInput["heading"] = data.config.heading;
+                    data.config.img1 ? 
+                    (dataInput["img1"] = data.config.img1)
+                    :
+                    (
+                        console.log("No Image")
+                    );
+                    data.config.img2 ? 
+                    (dataInput["img2"] = data.config.img2)
+                    :
+                    (
+                        console.log("No Image")
+
+                    );
+
+                }
+                dataInput["logo"] = config.COMPANY_LOGO;
+                text = dataInput["text"];
+                htmlBody = EMAIL_PROMOTIONAL_OFFER( dataInput );
                 that.sendMail(to, subject, text, htmlBody);
 
         }
