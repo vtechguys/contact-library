@@ -11,21 +11,12 @@ const dbOperations = {
         mailer.createMail(emailObj,type);
         //creates a new db entry
         var emailDoc = {};
-        console.log("\t",
-        
-        
-        
-        
-        
-        "this is it",
-        
-        emailTypes[type]);
         emailDoc["to"] = emailObj.to;
-        emailDoc["subject"] = emailObj.subject || emailTypes[type].subject || "subject";
+        emailDoc["subject"] = emailObj.subject || emailTypes[type].subject;
         emailDoc["text"] = emailObj.text || emailTypes[type].text;
         emailDoc["by"] = emailObj.admin;
-
-        let email = new Email(emailObj);
+        emailDoc["type"] = emailObj.type;
+        let email = new Email(emailDoc);
         email.save(function(error,result){
             if(error){
                 

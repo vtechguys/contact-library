@@ -24,9 +24,9 @@ const emails = {
         text:"A followup mail from us."
     },
     promotionalOffer:{
-        subject:`FollowUp from ${ config.COMPANY_NAME }`,
+        subject:`promotionalOffer from ${ config.COMPANY_NAME }`,
         
-        text:"A followup mail from us."
+        text:"A promotionalOffer mail from us."
     },
     
    

@@ -10,6 +10,7 @@ function EMAIL_FOLLOWUP(data){
 }
 function EMAIL_PROMOTIONAL_OFFER(data){
     return (`
+        promotionaloffer
         ${data}
     `)
 }

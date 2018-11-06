@@ -175,7 +175,7 @@ function authenticate(email,pass){
 
 
 router.post('/create-mail',(request,response)=>{
-    let body = _.pick(request.body,["to","subject","text","type","admin","pass"]);
+    let body = _.pick(request.body,["to","subject","text","type","admin","pass","config"]);
     const { errors,isValid } = validateEmailInfo( request.body );
 
 
@@ -187,7 +187,6 @@ router.post('/create-mail',(request,response)=>{
 
         if( authenticate(body.admin,body.pass) ){
 
-            body["by"] = body.admin;
             dbOperations.sendEmail(body,(error,result)=>{
                 if(error){
                     console.log(error);

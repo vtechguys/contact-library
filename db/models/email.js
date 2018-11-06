@@ -8,6 +8,8 @@ const EmailSchema = new Schema({
     },
     subject:{
         type:String,
+        required:[true,"Email Subject Field is required"],
+
     },
     text:{
         type:String,
@@ -19,7 +21,7 @@ const EmailSchema = new Schema({
     },
     type:{
         type:String,
-        required:[true,"Email By Field is required"]
+        required:[true,"Email Type Field is required"]
 
     },
     createdAt:{
