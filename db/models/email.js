@@ -24,10 +24,13 @@ const EmailSchema = new Schema({
         required:[true,"Email Type Field is required"]
 
     },
+    cc:[String],
+    bcc:[String],
     createdAt:{
         type:Date,
         default:Date.now(),
     },
+    
 
 });
 

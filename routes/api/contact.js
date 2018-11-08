@@ -28,6 +28,24 @@ const validate = {
             return true;
         }
     },
+    multipleMail:function(array){
+        var that = this;
+        var isValidCC = true;
+        if( typeof(array)==="object" && array instanceof Array){
+            array.forEach(email=>{
+                if(!isValidCC){
+                    return isValidCC;
+                }
+                else{
+                    isValidCC = isValidCC && that.email(email);
+                }
+            })
+        }
+        else{
+            isValidCC=false;
+        }
+        return isValidCC;
+    },
     mobile: function (string) {
         if (string === undefined || typeof(string)!="string") {
             return false;
@@ -140,14 +158,34 @@ function validateEmailInfo(info){
         
         }
 
+        if(info.cc || info.cc===""){
+            if(!validate.multipleMail(info.cc)){
+                errors["cc"]="Invalid CC.CC must be array of valid Emails";
+            }
+        }
+        if(info.bcc || info.bcc===""){
+            if(!validate.multipleMail(info.bcc)){
+                errors["bcc"]="Invalid BCC.BCC must be array of valid Emails";
+            }
+        }
 
-
+       
+        if(info.config || info.config===""){
+            console.log(typeof(info.config)==="object",Object.keys(info.config)>0,info.config)
+            if((typeof(info.config)==="object" && Object.keys(info.config)>0)){
+                errors["config"]="Config field invalid";
+            }
+        }
+        else{
+            errors["config"]="Config field is required";
+        }
 
     }
     else{
         errors["to"] = "To field is required.";
         errors["type"]="Type filed is required",
         errors["admin"]="Admin field is required";
+        errors["config"]="Config field is required";
         
     }
 
@@ -225,21 +263,22 @@ const validateSMS = function(object){
   }
 
 router.post('/create-mail',(request,response)=>{
-    let body = _.pick(request.body,["to","subject","text","type","admin","pass","config"]);
+    let body = _.pick(request.body,["to","subject","text","type","admin","pass","config","cc","bcc"]);
     const { errors,isValid } = validateEmailInfo( request.body );
 
-
+    console.log(body);
+    console.log(request.body);
     if(!isValid){
         response.json({"message":"Invalid parameters","code":400,"success":false,"errors":errors});
 
     }
     else{
 
-        if( authenticate(body.admin,body.pass) ){
-
+        if( authenticate(body.admin,body.pass) ){//this sholud later be findDB authorised user authentication here after RBAC
+            
             dbOperations.sendEmail(body,(error,result)=>{
                 if(error){
-                    console.log(error);
+                    console.log("routes>api>[contact.js]>/create-mail>sendEmail>Error occured is ",error);
                     response.json({"message":"Some Error Occured Try again Later!","code":500,"success":false});
                 }
                 else{

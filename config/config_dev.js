@@ -1,7 +1,7 @@
 module.exports = {
     SMTP_SERVICE:"gmail",
     SMTP_MAIL_ID:"dev.devopsgenesis@gmail.com",
-    SMTP_MAIL_PASS:"MailPass",
+    SMTP_MAIL_PASS:"Ytrewq.12345",
 
 
     COMPANY_NAME:"DevOps Genesis",
