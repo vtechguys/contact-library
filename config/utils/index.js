@@ -1,5 +1,7 @@
 const mailer = require('./mailer');
+const messenger = require('./messenger')
 
 module.exports = {
-    "mailer":mailer
+    "mailer":mailer,
+    messenger
 }
