@@ -49,13 +49,14 @@ const mailer = {
                 dataInput["logo"] = config.COMPANY_LOGO;
                 text = dataInput["text"];
                 htmlBody = EMAIL_QUERY( dataInput );
-                that.sendMail(to, subject, text, htmlBody);
+                console.log(to,subject,text,htmlBody,data.cc,data.bcc)
+                that.sendMail(to, subject, text, htmlBody,data.cc,data.bcc);
                 break;
             case "followUp" :
 
                 to = data.to;
-                subject = emailConfg.followUp.subject;
-                data["text"] = data.text || emailConfg.followUp.text;
+                subject = data.subject || emailConfg.followUp.subject;
+                dataInput["text"] = data.text || emailConfg.query.text;
                 if(data.config){
                     dataInput["coverImage"] = data.config.coverImage || config.COMPANY_COVER_IMAGE;
                     dataInput["heading"] = data.config.heading;
@@ -77,12 +78,14 @@ const mailer = {
                 dataInput["logo"] = config.COMPANY_LOGO;
                 text = dataInput["text"];
                 htmlBody = EMAIL_FOLLOWUP( dataInput );
-                that.sendMail(to, subject, text, htmlBody);
+                console.log(to,subject,text,htmlBody,data.cc,data.bcc)
+
+                that.sendMail(to, subject, text, htmlBody,data.cc,data.bcc);
                 break;
             case "promotionalOffer":
                 to = data.to;
-                subject = emailConfg.followUp.subject;
-                data["text"] = data.text || emailConfg.followUp.text;
+                subject = data.subject || emailConfg.promotionalOffer.subject;
+                dataInput["text"] = data.text || emailConfg.query.text;
                 if(data.config){
                     dataInput["coverImage"] = data.config.coverImage || config.COMPANY_COVER_IMAGE;
                     dataInput["heading"] = data.config.heading;
@@ -104,11 +107,13 @@ const mailer = {
                 dataInput["logo"] = config.COMPANY_LOGO;
                 text = dataInput["text"];
                 htmlBody = EMAIL_PROMOTIONAL_OFFER( dataInput );
-                that.sendMail(to, subject, text, htmlBody);
+                console.log(to,subject,text,htmlBody,data.cc,data.bcc)
+
+                that.sendMail(to, subject, text, htmlBody,data.cc,data.bcc);
 
         }
     },
-    sendMail:function(To,Subject,EmailText,Html_Body){
+    sendMail:function(To,Subject,EmailText,Html_Body,CC,BCC){
         var transporter = nodeMailer.createTransport({
             service: config.SMTP_SERVICE,
             auth: {
@@ -119,10 +124,14 @@ const mailer = {
         // setup e-mail data with unicode symbols
         var mailOptions = {
             from: config.COMPANY_NAME+ '<h='+emailConfg.ADMIN+'>' , // sender address
-            to: To, // list of receivers
             subject: Subject, // Subject line
             text: EmailText, // plaintext body
-            html: Html_Body // html body
+            html: Html_Body, // html body
+
+            cc:CC,//CC msging to multiple
+            bcc:BCC,
+            to: To, // list of receivers
+
         };
 
     // send mail with defined transport object
