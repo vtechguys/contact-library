@@ -15,6 +15,7 @@ const dbOperations = {
         emailDoc["type"] = emailObj.type;
         emailDoc["cc"] = emailObj.cc;
         emailDoc["bcc"] = emailObj.bcc;
+        emailDoc["config"] = emailObj.config;
         //will send mail
         mailer.createMail(emailDoc,type);
         //creates a new db entry

@@ -167,13 +167,23 @@ function validateEmailInfo(info){
             }
         }
 
-
+       
+        if(info.config || info.config===""){
+            console.log(typeof(info.config)==="object",Object.keys(info.config)>0,info.config)
+            if((typeof(info.config)==="object" && Object.keys(info.config)>0)){
+                errors["config"]="Config field invalid";
+            }
+        }
+        else{
+            errors["config"]="Config field is required";
+        }
 
     }
     else{
         errors["to"] = "To field is required.";
         errors["type"]="Type filed is required",
         errors["admin"]="Admin field is required";
+        errors["config"]="Config field is required";
         
     }
 
@@ -206,7 +216,8 @@ router.post('/create-mail',(request,response)=>{
     let body = _.pick(request.body,["to","subject","text","type","admin","pass","config","cc","bcc"]);
     const { errors,isValid } = validateEmailInfo( request.body );
 
-
+    console.log(body);
+    console.log(request.body);
     if(!isValid){
         response.json({"message":"Invalid parameters","code":400,"success":false,"errors":errors});
 

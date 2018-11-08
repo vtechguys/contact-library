@@ -28,25 +28,9 @@ const mailer = {
                 to = data.to;
                 subject = data.subject || emailConfg.query.subject;
                 dataInput["text"] = data.text || emailConfg.query.text;
-                if(data.config){
-                    dataInput["coverImage"] = data.config.coverImage || config.COMPANY_COVER_IMAGE;
-                    dataInput["heading"] = data.config.heading;
-                    data.config.img1 ? 
-                    (dataInput["img1"] = data.config.img1)
-                    :
-                    (
-                        console.log("No Image")
-                    );
-                    data.config.img2 ? 
-                    (dataInput["img2"] = data.config.img2)
-                    :
-                    (
-                        console.log("No Image")
-
-                    );
-
-                }
+                
                 dataInput["logo"] = config.COMPANY_LOGO;
+                dataInput["config"]= data.config;
                 text = dataInput["text"];
                 htmlBody = EMAIL_QUERY( dataInput );
                 console.log(to,subject,text,htmlBody,data.cc,data.bcc)
@@ -57,25 +41,9 @@ const mailer = {
                 to = data.to;
                 subject = data.subject || emailConfg.followUp.subject;
                 dataInput["text"] = data.text || emailConfg.query.text;
-                if(data.config){
-                    dataInput["coverImage"] = data.config.coverImage || config.COMPANY_COVER_IMAGE;
-                    dataInput["heading"] = data.config.heading;
-                    data.config.img1 ? 
-                    (dataInput["img1"] = data.config.img1)
-                    :
-                    (
-                        console.log("No Image")
-                    );
-                    data.config.img2 ? 
-                    (dataInput["img2"] = data.config.img2)
-                    :
-                    (
-                        console.log("No Image")
-
-                    );
-
-                }
+             
                 dataInput["logo"] = config.COMPANY_LOGO;
+                dataInput["config"]= data.config;
                 text = dataInput["text"];
                 htmlBody = EMAIL_FOLLOWUP( dataInput );
                 console.log(to,subject,text,htmlBody,data.cc,data.bcc)
@@ -86,25 +54,9 @@ const mailer = {
                 to = data.to;
                 subject = data.subject || emailConfg.promotionalOffer.subject;
                 dataInput["text"] = data.text || emailConfg.query.text;
-                if(data.config){
-                    dataInput["coverImage"] = data.config.coverImage || config.COMPANY_COVER_IMAGE;
-                    dataInput["heading"] = data.config.heading;
-                    data.config.img1 ? 
-                    (dataInput["img1"] = data.config.img1)
-                    :
-                    (
-                        console.log("No Image")
-                    );
-                    data.config.img2 ? 
-                    (dataInput["img2"] = data.config.img2)
-                    :
-                    (
-                        console.log("No Image")
-
-                    );
-
-                }
+               
                 dataInput["logo"] = config.COMPANY_LOGO;
+                dataInput["config"]= data.config;
                 text = dataInput["text"];
                 htmlBody = EMAIL_PROMOTIONAL_OFFER( dataInput );
                 console.log(to,subject,text,htmlBody,data.cc,data.bcc)
