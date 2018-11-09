@@ -264,8 +264,8 @@ const validateSMS = function(object){
         errors : errors
     }
   }
-
-router.post('/create-mail',(request,response)=>{
+//send email normal without accessing specific data.Common Bulk Msg sending
+router.post('/send-email',(request,response)=>{
     let body = _.pick(request.body,["to","subject","text","type","admin","pass","config","cc","bcc"]);
     const { errors,isValid } = validateEmailInfo( request.body );
 
@@ -310,63 +310,101 @@ router.post('/create-mail',(request,response)=>{
 
     
 });
+router.post('/send-email-otp',(request,response)=>{
+    let body = _.pick(request.body,["to","subject","text","type","admin","pass","config"]);
+    const { isValid,errors } = validateEmailInfo( body );
+    //should check for authorization here when we have RBAC request.userData.role
+    if(!isValid){
+        response.json({"message":"Invalid parameters","code":400,"success":false,"errors":errors});
+    }
+    else{
 
-  
-  
-  router.post('/send-sms', function(request, response) {
-      
-        //"to" : ["an array of phone numbers"]
-        var body = _.pick(request.body,['text','to','service','type'])
-        console.log(body)
-        var {isValid, errors} = validateSMS(body)
-        body.to.forEach((value, index)=>{
-            body.to[index] = value.split(' ').join('')
-        })
-        
-        if(isValid){
-        //   if(body.type !== TYPE.OTP){
-            var SmsDbOperations = require('../../db/crudOperations/sms')
-            SmsDbOperations.createSMS(body,(error, result)=>{
+        if( authenticate(body.admin,body.pass) ){//this sholud later be findDB authorised user authentication here after RBAC
+            
+            dbOperations.sendOTP(body,(error,result)=>{
                 if(error){
-                     response.json({"message":"Some Error Occured Try again Later!","code":500,"success":false});
-                }else{
+                    console.log("routes>api>[contact.js]>/create-email-otp>sendEmail>Error occured is ",error);
+                    response.json({"message":"Some Error Occured Try again Later!","code":500,"success":false});
+                }
+                else{
                     if(!result){
-                        response.json({"message":"Unable To send","code":400,"success":false});
-                    }else{
-                        response.json({"message":"Successfully sent ","code":200,"success":true});
+                        response.json({"message":"Unable To send mail otp","code":400,"success":false});
+                    }
+                    else{
+                        response.json({"message":"Successfully sent mail otp","code":200,"success":true});
+    
                     }
                 }
-            })
-            // sendSMS(body,(error, result)=>{
-            //   if(error){
-            //     console.log(error)
-            //     response.send({error,message : "Error Occured"})
-            //   }else{
-            //     if(!result){
-            //       response.send({result : null,message : 'Nothing happened'})
-            //     }else{
-            //       console.log(result)
-            //       response.status(200).send({result,message : 'Message sent successfully'})
-            //     }
-            //   }
-            // })
-        //   }else{
-        //     sendOTP(body,(error, result)=>{
-        //       if(error){
-        //         console.log(error)
-        //         response.send({error,message : "Error Occured"})
-        //       }else{
-        //         if(!result){
-        //           response.send({result : null,message : 'Nothing happened'})
-        //         }else{
-        //           console.log(result)
-        //           response.status(200).send({result,message : 'OTP Sent on ' + body.to})
-        //         }
-        //       }
-        //     })
-        //   }
-        }else{
-          response.json({"message":"Invalid parameters","code":400,"success":false,"errors":errors});
+            });
+
+
         }
-  });
+        else{
+            response.json({"message":"unauthorized","code":401,"success":false});
+        }
+
+
+
+        
+    }
+
+})
+
+  
+router.post('/send-sms', function(request, response) {
+    
+    //"to" : ["an array of phone numbers"]
+    var body = _.pick(request.body,['text','to','service','type'])
+    console.log(body)
+    var {isValid, errors} = validateSMS(body)
+    body.to.forEach((value, index)=>{
+        body.to[index] = value.split(' ').join('')
+    })
+    
+    if(isValid){
+    //   if(body.type !== TYPE.OTP){
+        var SmsDbOperations = require('../../db/crudOperations/sms')
+        SmsDbOperations.createSMS(body,(error, result)=>{
+            if(error){
+                    response.json({"message":"Some Error Occured Try again Later!","code":500,"success":false});
+            }else{
+                if(!result){
+                    response.json({"message":"Unable To send","code":400,"success":false});
+                }else{
+                    response.json({"message":"Successfully sent ","code":200,"success":true});
+                }
+            }
+        })
+        // sendSMS(body,(error, result)=>{
+        //   if(error){
+        //     console.log(error)
+        //     response.send({error,message : "Error Occured"})
+        //   }else{
+        //     if(!result){
+        //       response.send({result : null,message : 'Nothing happened'})
+        //     }else{
+        //       console.log(result)
+        //       response.status(200).send({result,message : 'Message sent successfully'})
+        //     }
+        //   }
+        // })
+    //   }else{
+    //     sendOTP(body,(error, result)=>{
+    //       if(error){
+    //         console.log(error)
+    //         response.send({error,message : "Error Occured"})
+    //       }else{
+    //         if(!result){
+    //           response.send({result : null,message : 'Nothing happened'})
+    //         }else{
+    //           console.log(result)
+    //           response.status(200).send({result,message : 'OTP Sent on ' + body.to})
+    //         }
+    //       }
+    //     })
+    //   }
+    }else{
+        response.json({"message":"Invalid parameters","code":400,"success":false,"errors":errors});
+    }
+});
 module.exports = router;

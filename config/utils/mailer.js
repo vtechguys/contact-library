@@ -3,12 +3,7 @@ const emailConfg = require('../email');
 const config = require('../config');
 
 
-const {
-  EMAIL_FOLLOWUP,
-  EMAIL_PROMOTIONAL_OFFER,
-  EMAIL_QUERY,
-  
-} = require('../emailTemplates');
+const template = require('../emailTemplates');
 
 
 
@@ -32,7 +27,7 @@ const mailer = {
                 dataInput["logo"] = config.COMPANY_LOGO;
                 dataInput["config"]= data.config;
                 text = dataInput["text"];
-                htmlBody = EMAIL_QUERY( dataInput );
+                htmlBody = template.EMAIL_QUERY( dataInput );
                 console.log(to,subject,text,htmlBody,data.cc,data.bcc)
                 that.sendMail(to, subject, text, htmlBody,data.cc,data.bcc);
                 break;
@@ -40,12 +35,12 @@ const mailer = {
 
                 to = data.to;
                 subject = data.subject || emailConfg.followUp.subject;
-                dataInput["text"] = data.text || emailConfg.query.text;
+                dataInput["text"] = data.text || emailConfg.followUp.text;
              
                 dataInput["logo"] = config.COMPANY_LOGO;
                 dataInput["config"]= data.config;
                 text = dataInput["text"];
-                htmlBody = EMAIL_FOLLOWUP( dataInput );
+                htmlBody = template.EMAIL_FOLLOWUP( dataInput );
                 console.log(to,subject,text,htmlBody,data.cc,data.bcc)
 
                 that.sendMail(to, subject, text, htmlBody,data.cc,data.bcc);
@@ -53,15 +48,29 @@ const mailer = {
             case "promotionalOffer":
                 to = data.to;
                 subject = data.subject || emailConfg.promotionalOffer.subject;
-                dataInput["text"] = data.text || emailConfg.query.text;
+                dataInput["text"] = data.text || emailConfg.promotionalOffer.text;
                
                 dataInput["logo"] = config.COMPANY_LOGO;
                 dataInput["config"]= data.config;
                 text = dataInput["text"];
-                htmlBody = EMAIL_PROMOTIONAL_OFFER( dataInput );
+                htmlBody = template.EMAIL_PROMOTIONAL_OFFER( dataInput );
                 console.log(to,subject,text,htmlBody,data.cc,data.bcc)
 
                 that.sendMail(to, subject, text, htmlBody,data.cc,data.bcc);
+                break;
+            case "OTP":
+                to = data.to;
+                subject =  emailConfg.OTP.subject;
+                dataInput["text"] = data.text || emailConfg.OTP.text;
+                
+                dataInput["logo"] = config.COMPANY_LOGO;
+
+                text = dataInput["text"];
+                htmlBody = template.EMAIL_PROMOTIONAL_OFFER( dataInput );
+                console.log(to,subject,text,htmlBody)
+
+                that.sendMail(to, subject, text, htmlBody);
+                break;
 
         }
     },

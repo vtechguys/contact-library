@@ -10,7 +10,7 @@ module.exports = {
 
     DB_URL:'mongodb://localhost:27017/messenger',
 
-    VALID_MAIL_TYPES:['query','followUp','newsLetter','promotionalOffer'],
+    VALID_MAIL_TYPES:['query','followUp','newsLetter','promotionalOffer','OTP'],
     ADMIN_MAILS:[
         {mail:'aniketjhaindia@gmail.com',pass:"abcd"},
         {mail:'ashughildiyal5@gmail.com',pass:"abcd"},
