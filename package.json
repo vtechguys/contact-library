@@ -4,7 +4,7 @@
   "description": "Mailer app",
   "main": "index.js",
   "scripts": {
-    "start":"node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -18,5 +18,14 @@
     "msg91": "0.0.6",
     "randomstring": "^1.1.5",
     "twilio": "^3.23.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vtechguys/contact-library.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vtechguys/contact-library/issues"
+  },
+  "homepage": "https://github.com/vtechguys/contact-library#readme"
 }

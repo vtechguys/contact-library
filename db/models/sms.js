@@ -7,21 +7,26 @@ const SmsSchema = new Schema({
         required : true,
         unique : true
     },
-    account_sid : {
-        type : String,
-        required :true
-    },
-    date_created : {
-        type : Date,
-        required : true
+    // serviceId :{
+    //     type : String,
+    //     unique : true
+    // },
+    verification : {
+        
+        OTP : {
+            type :String,
+            // unique : true
+        },
+        status : {
+            type :String,
+        },
+        expiresIn : {
+            type : Date
+        }
     },
     date_sent : {
         type : Date,
         required : true
-    },
-    direction : {
-        type : String,
-        required  : true
     },
     status : {
         type  : String,
@@ -43,7 +48,7 @@ const SmsSchema = new Schema({
         type :String,
         required :true
     },
-    body : {
+    text : {
         type : String,
         required : true
     }
