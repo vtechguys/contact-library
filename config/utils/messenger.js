@@ -1,11 +1,6 @@
 
 
-const {TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_MY_NUMBER,
-    MSG91_API_KEY,MSG91_SENDER_ID,MSG91_ROUTE_ID_PROMOTIONAL,MSG91_ROUTE_ID_TRANSACTIONAL,
-    SERVICES_TWILIO,SERVICES_MSG91,
-    TYPE_PROMOTIONAL,TYPE_TRANSACTIONAL,
-    COUNTRY_CODE_INDIA
-    } = require('../config')
+const config = require('../config')
 
 // const {OTP_BODY} = require('../smsTemplates')
 const uniqueId = require('../../utils/uniqueId')
@@ -21,17 +16,17 @@ module.exports = messenger = {
         message['status'] = 'Sent'
 
         switch(type){
-            case TYPE_PROMOTIONAL:
-                message['type'] = TYPE_PROMOTIONAL
+            case config.TYPE_PROMOTIONAL:
+                message['type'] = config.TYPE_PROMOTIONAL
                 message['text'] = text
-                message['service'] = SERVICES_MSG91
-                message['from'] = MSG91_SENDER_ID
+                message['service'] = config.SERVICES_MSG91
+                message['from'] = config.MSG91_SENDER_ID
             break;
-            case TYPE_TRANSACTIONAL:
-                message['type'] = TYPE_TRANSACTIONAL
+            case config.TYPE_TRANSACTIONAL:
+                message['type'] = config.TYPE_TRANSACTIONAL
                 message['text'] = text
-                message['service'] = SERVICES_MSG91 || SERVICES_TWILIO
-                message['from'] = message.service === SERVICES_TWILIO ? TWILIO_MY_NUMBER : MSG91_SENDER_ID
+                message['service'] = config.SERVICES_MSG91 || config.SERVICES_TWILIO
+                message['from'] = message.service === config.SERVICES_TWILIO ? config.TWILIO_MY_NUMBER : config.MSG91_SENDER_ID
             break;
             
         }
@@ -43,10 +38,10 @@ module.exports = messenger = {
     //sends Message Only to verified numbers 
     sendViaTwilio : (message)=>{
             
-                const client = require('twilio')(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN)
+                const client = require('twilio')(config.TWILIO_ACCOUNT_SID,config.TWILIO_AUTH_TOKEN)
                 client.messages.create({
                     body : message.text,
-                    to : COUNTRY_CODE_INDIA + message.to,  //+91 - country code
+                    to : config.COUNTRY_CODE_INDIA + message.to,  //+91 - country code
                     from : message.from
                 })
 
@@ -54,12 +49,12 @@ module.exports = messenger = {
 
     sendViaMSG91 : (message)=>{
     
-                if(message.type === TYPE_PROMOTIONAL){
-                    var msg91 = require('msg91')(MSG91_API_KEY,MSG91_SENDER_ID,MSG91_ROUTE_ID_PROMOTIONAL)
+                if(message.type === config.TYPE_PROMOTIONAL){
+                    var msg91 = require('msg91')(config.MSG91_API_KEY,config.MSG91_SENDER_ID,config.MSG91_ROUTE_ID_PROMOTIONAL)
                 }
 
-                if(message.type === TYPE_TRANSACTIONAL ){
-                    var msg91 = require('msg91')(MSG91_API_KEY,MSG91_SENDER_ID,MSG91_ROUTE_ID_TRANSACTIONAL)
+                if(message.type === config.TYPE_TRANSACTIONAL ){
+                    var msg91 = require('msg91')(config.MSG91_API_KEY,config.MSG91_SENDER_ID,config.MSG91_ROUTE_ID_TRANSACTIONAL)
                 }
 
                 msg91.send(message.to,message.text)

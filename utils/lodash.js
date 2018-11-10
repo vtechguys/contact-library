@@ -21,7 +21,10 @@ const isEmpty = value =>
   (typeof value === 'object' && Object.keys(value).length === 0) ||
   (typeof value === 'string' && value.trim().length === 0);
 
+
+  const trimAllSpaces = (value) =>  value.split(' ').join('')
 module.exports = {
     pick:pick,
-    isEmpty:isEmpty
+    isEmpty:isEmpty,
+    trimAllSpaces : trimAllSpaces
 }

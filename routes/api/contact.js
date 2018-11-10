@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const _ = require('../../utils/lodash');
-const {TYPE_PROMOTIONAL,TYPE_TRANSACTIONAL} = require('../../config/config');
+const config = require('../../config/config');
 
 const dbOperations = require('../../db/crudOperations/email');
 
@@ -234,7 +234,7 @@ const validateSMS = function(object){
     if(!validate.smallString(object.type)){
         errors.type = 'Message type cannot be empty'
     }
-    if(object.type !== TYPE_PROMOTIONAL && object.type!==TYPE_TRANSACTIONAL){
+    if(object.type !== config.TYPE_PROMOTIONAL && object.type!==config.TYPE_TRANSACTIONAL){
         errors.type = 'Invalid Message Type'
     }
   
@@ -333,10 +333,10 @@ router.post('/send-email-otp',(request,response)=>{
         var {isValid, errors} = validateSMS(body)
         if(Array.isArray(body.to)){
             body.to.forEach((value, index)=>{
-                body.to[index] = value.split(' ').join('')
+                body.to[index] = _.trimAllSpaces(value)
             })
         }else{
-            body.to = body.to.split(' ').join('')
+            body.to = _.trimAllSpaces(body.to)
         }
        
         
