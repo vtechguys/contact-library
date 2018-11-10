@@ -7,23 +7,6 @@ const SmsSchema = new Schema({
         required : true,
         unique : true
     },
-    // serviceId :{
-    //     type : String,
-    //     unique : true
-    // },
-    verification : {
-        
-        OTP : {
-            type :String,
-            // unique : true
-        },
-        status : {
-            type :String,
-        },
-        expiresIn : {
-            type : Date
-        }
-    },
     date_sent : {
         type : Date,
         required : true

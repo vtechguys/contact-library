@@ -1,220 +1,70 @@
 
 
-const {TWILIO,MSG91,SERVICES,TYPE,EXPIRES_IN} = require('../config')
-const {OTP_BODY} = require('../smsTemplates')
+const {TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_MY_NUMBER,
+    MSG91_API_KEY,MSG91_SENDER_ID,MSG91_ROUTE_ID_PROMOTIONAL,MSG91_ROUTE_ID_TRANSACTIONAL,
+    SERVICES_TWILIO,SERVICES_MSG91,
+    TYPE_PROMOTIONAL,TYPE_TRANSACTIONAL,
+    COUNTRY_CODE_INDIA
+    } = require('../config')
+
+// const {OTP_BODY} = require('../smsTemplates')
 const uniqueId = require('../../utils/uniqueId')
 
 
 module.exports = messenger = {
 
-    prepareSMS : (to,text,type,service)=>{
+    prepareSMS : (to,text,type)=>{
         var message = {}
         message['to'] = to
         message['messageId'] = uniqueId.randomString(8)
         message['date_sent'] = Date.now()
+        message['status'] = 'Sent'
 
         switch(type){
-            case TYPE.PROMOTIONAL:
-                message['type'] = TYPE.PROMOTIONAL
+            case TYPE_PROMOTIONAL:
+                message['type'] = TYPE_PROMOTIONAL
                 message['text'] = text
+                message['service'] = SERVICES_MSG91
+                message['from'] = MSG91_SENDER_ID
             break;
-            case TYPE.TRANSACTIONAL:
-                message['type'] = TYPE.TRANSACTIONAL
+            case TYPE_TRANSACTIONAL:
+                message['type'] = TYPE_TRANSACTIONAL
                 message['text'] = text
-            break;
-            case TYPE.OTP :
-                var verification = {}
-                message['type'] = TYPE.OTP
-                verification['OTP'] = uniqueId.randomString(4)
-                verification['expiresIn'] = message.date_sent + EXPIRES_IN*60000
-                verification['status'] = 'Not Verified'
-                message['verification'] = verification
-                message['text'] = OTP_BODY + verification.OTP
+                message['service'] = SERVICES_MSG91 || SERVICES_TWILIO
+                message['from'] = message.service === SERVICES_TWILIO ? TWILIO_MY_NUMBER : MSG91_SENDER_ID
             break;
             
         }
-
-        switch(service){
-            case SERVICES.TWILIO :
-                message['service'] = SERVICES.TWILIO
-                message['from'] = TWILIO.MY_NUMBER
-            break;
-            case SERVICES.MSG91 :
-                message['service'] = SERVICES.MSG91
-                message['from'] = MSG91.SENDER_ID
-            break;
-            default : 
-                message['service'] = SERVICES.MSG91
-                message['from'] = MSG91.SENDER_ID
-        }
-        message['status'] = 'Sent'
-        // console.log(message)
+        
         
         return message
     },
 
-    sendSMS : (message)=>{
-
-        switch(message.service){
-
-            case SERVICES.TWILIO :
-
-                const {ACCOUNT_SID,AUTH_TOKEN} = TWILIO
-                const client = require('twilio')(ACCOUNT_SID,AUTH_TOKEN)
+    //sends Message Only to verified numbers 
+    sendViaTwilio : (message)=>{
+            
+                const client = require('twilio')(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN)
                 client.messages.create({
                     body : message.text,
-                    to : '+91'+message.to,  //+91 - country code
+                    to : COUNTRY_CODE_INDIA + message.to,  //+91 - country code
                     from : message.from
                 })
-                // ,(error, result)=>{
-                //     if(error){
-                //         console.log(error)
-                //         callback(error, null)
-                //     }else{
-                //         if(!result){
-                //             callback(null, null)
-                //         }else{
 
-                            // console.log(result)
-                            // result['service'] = SERVICES.TWILIO
-                            // const dbOperations = require('../../db/crudOperations/sms')
-                            // dbOperations.createSMS(result,(error, result1)=>{
-                            //     if(error){
-                            //         callback(error,null)
-                            //     }else{
-                            //         if(!result1){
-                            //             callback(null, null)
-                            //         }else{
-                            //             result['dbStatus'] = result1
-                            //             callback(null, result)
-                            //         }
-                            //     }
-                            // })
-                //         }
-                //     }
-                // })
-                break;
+        },
 
-            case SERVICES.MSG91 :
-                const {SENDER_ID,API_KEY,ROUTE_ID} = MSG91
-                if(message.type === TYPE.PROMOTIONAL){
-                    // console.log(TYPE.PROMOTIONAL)
-                    var msg91 = require('msg91')(API_KEY,SENDER_ID,ROUTE_ID.PROMOTIONAL)
+    sendViaMSG91 : (message)=>{
+    
+                if(message.type === TYPE_PROMOTIONAL){
+                    var msg91 = require('msg91')(MSG91_API_KEY,MSG91_SENDER_ID,MSG91_ROUTE_ID_PROMOTIONAL)
                 }
 
-                if(message.type === TYPE.TRANSACTIONAL || message.type === TYPE.OTP){
-                    // console.log(TYPE.TRANSACTIONAL)
-                    var msg91 = require('msg91')(API_KEY,SENDER_ID,ROUTE_ID.TRANSACTIONAL)
+                if(message.type === TYPE_TRANSACTIONAL ){
+                    var msg91 = require('msg91')(MSG91_API_KEY,MSG91_SENDER_ID,MSG91_ROUTE_ID_TRANSACTIONAL)
                 }
-                // console.log(message)
-                msg91.send(message.to,message.text,function(error, result){
-                    if(error){
-                        console.log(error)
-                    }else{
-                        console.log(result)
-                    }
-                })
-                // ,(error, result)=>{
-                //     if(error){
-                //         console.log(error)
-                //         callback(error, null)
-                //     }else{
-                //         if(!result){
-                //             callback(null, null)
-                //         }else{
-                            // console.log(result)
-                            // var messageObj = {}
-                            // messageObj['sid'] = result
-                            // messageObj['accountSid'] = SENDER_ID
-                            // messageObj['to'] = message.to  //saving without country code
-                            // messageObj['from'] = SENDER_ID
-                            // messageObj['body'] = message.body
-                            // messageObj['service'] = SERVICES.MSG91
-                            // messageObj['status'] = "Sent"
-                            // messageObj['direction'] = "outbound-api"
-                            // messageObj['type'] = message.type
-                            // console.log(messageObj)
-                            // const dbOperations = require('../../db/crudOperations/sms')
-                            // dbOperations.createSMS(messageObj,(error, result1)=>{
-                            //     if(error){
-                            //         callback(error, null)
-                            //     }else{
-                            //         if(!result1){
-                            //             callback(null, null)
-                            //         }else{
-                            //             messageObj['dbStatus'] = result1
-                            //             callback(null, messageObj)
-                            //         }
-                            //     }
-                            // })
-                            // console.log(result)
-                //         }
-                //     }
-                // })
 
-
-                break;
-
-            default : 
-            
-                // const {SENDER_ID,API_KEY,ROUTE_ID} = MSG91
-                // var msg91 = require('msg91')(API_KEY,SENDER_ID,ROUTE_ID.TRANSACTIONAL)
-                // msg91.send(message.to,message.body,(error, result)=>{
-                //     if(error){
-                //         console.log(error)
-                //     }else{
-                //         if(!result){
-
-                //         }else{
-                //             console.log(result)
-                //         }
-                //     }
-                // })
-                console.log('fvghgvcvbnbvc')
-
-        }
+                msg91.send(message.to,message.text)
+    }
         
-    },
-    // sendOTP : (message,callback)=>{
-    //     var STRING = uniqueId.randomString(4)
-    //     var BODY = OTP_BODY + STRING
-    //     const {SENDER_ID,API_KEY,ROUTE_ID} = MSG91
-    //             var msg91 = require('msg91')(API_KEY,SENDER_ID,ROUTE_ID.TRANSACTIONAL)
-    //             msg91.send(message.to,BODY,(error, result)=>{
-    //                 if(error){
-    //                     console.log(error)
-    //                     callback(error, null)
-    //                 }else{
-    //                     if(!result){
-    //                         callback(null, null)
-    //                     }else{
-                            // console.log(result)
-                            // var messageObj = {}
-                            // messageObj['messageId'] = result
-                            // messageObj['to'] = message.to  //saving without country code
-                            // messageObj['from'] = SENDER_ID
-                            // messageObj['body'] = message.body
-                            // messageObj['service'] = SERVICES.MSG91
-                            // messageObj['status'] = "Sent"
-                            // messageObj['OTP'] = STRING
-                            // messageObj['direction'] = "outbound-api"
-                            // console.log(messageObj)
-                            // const dbOperations = require('../../db/crudOperations/otp')
-                            // dbOperations.createOTP(messageObj,(error, result1)=>{
-                            //     if(error){
-                            //         callback(error, null)
-                            //     }else{
-                            //         if(!result1){
-                            //             callback(null, null)
-                            //         }else{
-                            //             messageObj['dbStatus'] = result1
-                            //             callback(null, messageObj)
-                            //         }
-                            //     }
-                            // })
-                            // console.log(result)
-    //                     }
-    //                 }
-    //             })
-    // }
-}
+    }
+   
+    

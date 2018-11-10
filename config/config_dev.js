@@ -19,28 +19,24 @@ module.exports = {
         {mail:'hsharma151197@gmail.com',pass:"abcd"}],
 
         //messaging variables
-    SERVICES : {
-        TWILIO : 'twilio',
-        MSG91 : 'msg91'
-    },
-    TWILIO : {
-        AUTH_TOKEN : 'e9df2bb28db3d6b8b257920768fb2a9f',
-        ACCOUNT_SID : 'AC6c66bd7fdb3305f7cc54a681905ffbfc',
-        MY_NUMBER : '+13152846061'
-    },
-    MSG91 : {
-        API_KEY :'246455AZYeXWiILcl5be1b10f',
-        SENDER_ID : 'DEVOPS',
-        ROUTE_ID :{
-            PROMOTIONAL : 1,
-            TRANSACTIONAL : 4
-        }
-    },
-    EXPIRES_IN : 10,
-    TYPE : {
-        PROMOTIONAL : 'promotional',
-        TRANSACTIONAL : 'transactional',
-        OTP : 'OTP'
-    }
+    
+        SERVICES_TWILIO : 'twilio',
+        SERVICES_MSG91 : 'msg91',
+    
+        TWILIO_AUTH_TOKEN : 'e9df2bb28db3d6b8b257920768fb2a9f',
+        TWILIO_ACCOUNT_SID : 'AC6c66bd7fdb3305f7cc54a681905ffbfc',
+        TWILIO_MY_NUMBER : '+13152846061',
+
+        COUNTRY_CODE_INDIA : '+91',
+    
+        MSG91_API_KEY :'246455AZYeXWiILcl5be1b10f',
+        MSG91_SENDER_ID : 'DEVOPS',
+        MSG91_ROUTE_ID_PROMOTIONAL : 1,
+        MSG91_ROUTE_ID_TRANSACTIONAL : 4,
+        
+        EXPIRES_IN : 10,
+    
+        TYPE_PROMOTIONAL : 'promotional',
+        TYPE_TRANSACTIONAL : 'transactional'    
     
 }

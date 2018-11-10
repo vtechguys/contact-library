@@ -1,10 +1,7 @@
 const router = require('express').Router();
 
 const _ = require('../../utils/lodash');
-const config = require('../../config/config');
-
-// const {sendOTP,sendSMS} = require('../../config/utils/messenger')
-const {SERVICES,TYPE} = config
+const {TYPE_PROMOTIONAL,TYPE_TRANSACTIONAL} = require('../../config/config');
 
 const dbOperations = require('../../db/crudOperations/email');
 
@@ -216,47 +213,29 @@ function authenticate(email,pass){
 const validateSMS = function(object){
 
     const errors = {}
-    object.to.forEach((value, index)=>{
-        if(_.isEmpty(value) || value.split(' ').join('').length !== 10){
-            console.log(value.length)
-            errors.to[index] = 'Not a Valid Contact Number'
+    if(Array.isArray(object.to)){
+        object.to.forEach((value)=>{
+            if(!validate.mobile(value) || value.split(' ').join('').length !== 10){
+                console.log(value)
+                errors.to = 'Not a Valid Contact Number'
+            }
+        })
+    }else{
+        if(!validate.mobile(object.to) || object.to.split(' ').join('').length !== 10){
+            console.log(value)
+            errors.to = 'Not a Valid Contact Number'
         }
-    })
-    
+    }
 
-    if(_.isEmpty(object.text) && object.type !== TYPE.OTP){
+    if(!validate.longString(object.text) ){
         errors.text = 'Message Body cannot be empty'
     }
   
-    if(_.isEmpty(object.type)){
+    if(!validate.smallString(object.type)){
         errors.type = 'Message type cannot be empty'
-    }else{
-      var isExist = false;
-      Object.keys(TYPE).forEach(key=>{
-          if(TYPE[key] === object.type){
-              isExist = true
-          }
-      })
-      if(!isExist){
-          errors.type = 'Invalid Type'
-      }
-  }
-  
-  
-    
-  
-    if(_.isEmpty(object.service)){
-        object.service = SERVICES.MSG91
-    }else{
-        var isExist = false;
-        Object.keys(SERVICES).forEach(key=>{
-            if(SERVICES[key] === object.service){
-                isExist = true
-            }
-        })
-        if(!isExist){
-            errors.service = 'Invalid Service'
-        }
+    }
+    if(object.type !== TYPE_PROMOTIONAL && object.type!==TYPE_TRANSACTIONAL){
+        errors.type = 'Invalid Message Type'
     }
   
     return {
@@ -315,16 +294,20 @@ router.post('/create-mail',(request,response)=>{
   
   router.post('/send-sms', function(request, response) {
       
-        //"to" : ["an array of phone numbers"]
+        //"to" : ["an array of phone numbers for promotional messages"]
+        //"to" : ["single phone number for transactional messages"]
         var body = _.pick(request.body,['text','to','service','type'])
-        console.log(body)
         var {isValid, errors} = validateSMS(body)
-        body.to.forEach((value, index)=>{
-            body.to[index] = value.split(' ').join('')
-        })
+        if(Array.isArray(body.to)){
+            body.to.forEach((value, index)=>{
+                body.to[index] = value.split(' ').join('')
+            })
+        }else{
+            body.to = body.to.split(' ').join('')
+        }
+       
         
         if(isValid){
-        //   if(body.type !== TYPE.OTP){
             var SmsDbOperations = require('../../db/crudOperations/sms')
             SmsDbOperations.createSMS(body,(error, result)=>{
                 if(error){
@@ -337,34 +320,6 @@ router.post('/create-mail',(request,response)=>{
                     }
                 }
             })
-            // sendSMS(body,(error, result)=>{
-            //   if(error){
-            //     console.log(error)
-            //     response.send({error,message : "Error Occured"})
-            //   }else{
-            //     if(!result){
-            //       response.send({result : null,message : 'Nothing happened'})
-            //     }else{
-            //       console.log(result)
-            //       response.status(200).send({result,message : 'Message sent successfully'})
-            //     }
-            //   }
-            // })
-        //   }else{
-        //     sendOTP(body,(error, result)=>{
-        //       if(error){
-        //         console.log(error)
-        //         response.send({error,message : "Error Occured"})
-        //       }else{
-        //         if(!result){
-        //           response.send({result : null,message : 'Nothing happened'})
-        //         }else{
-        //           console.log(result)
-        //           response.status(200).send({result,message : 'OTP Sent on ' + body.to})
-        //         }
-        //       }
-        //     })
-        //   }
         }else{
           response.json({"message":"Invalid parameters","code":400,"success":false,"errors":errors});
         }
