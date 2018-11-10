@@ -28,7 +28,11 @@ const emails = {
         
         text:"A promotionalOffer mail from us."
     },
-    
+    OTP:{
+        subject:`OTP from ${ config.COMPANY_NAME }`,
+
+        text:`Your OTP is OTP_HERE`
+    }
    
    
 };
