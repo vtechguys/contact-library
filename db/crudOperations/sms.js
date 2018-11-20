@@ -1,5 +1,5 @@
 
-const SMS = require('../models/SMS')
+const SMS = require('../models/sms')
 const messenger = require('../../config/utils/messenger')
 const config = require('../../config/config')
 // const uniqueId = require('../../utils/uniqueId')
