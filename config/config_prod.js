@@ -33,7 +33,8 @@ module.exports = {
         
         
         TYPE_PROMOTIONAL : process.env.TYPE_PROMOTIONAL,
-        TYPE_TRANSACTIONAL : process.env.TYPE_TRANSACTIONAL
+        TYPE_TRANSACTIONAL : process.env.TYPE_TRANSACTIONAL,
     
-    
+        SMS_TYPES:['promotional','transactional']
+
 }
