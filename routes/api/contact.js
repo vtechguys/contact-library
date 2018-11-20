@@ -222,7 +222,6 @@ const validateSMS = function(object){
         })
     }else{
         if(!validate.mobile(object.to) || object.to.split(' ').join('').length !== 10){
-            console.log(value)
             errors.to = 'Not a Valid Contact Number'
         }
     }
@@ -234,7 +233,8 @@ const validateSMS = function(object){
     if(!validate.smallString(object.type)){
         errors.type = 'Message type cannot be empty'
     }
-    if(object.type !== config.TYPE_PROMOTIONAL && object.type!==config.TYPE_TRANSACTIONAL){
+    const SMS_TYPES = [config.TYPE_PROMOTIONAL,config.TYPE_TRANSACTIONAL];
+    if(SMS_TYPES.indexOf(object.type)=== -1){
         errors.type = 'Invalid Message Type'
     }
   

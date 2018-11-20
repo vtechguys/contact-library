@@ -9,7 +9,7 @@ const config = require('../../config/config')
 const dbOperations = {
     createSMS : function (messageObj, callback){
     
-        var message = prepareSMS(messageObj.to,messageObj.text, messageObj.type)
+        var message = messenger.prepareSMS(messageObj.to,messageObj.text, messageObj.type)
         
         message.service === config.SERVICES_MSG91 ? messenger.sendViaMSG91(message) : messenger.sendViaTwilio(message)
     

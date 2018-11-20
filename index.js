@@ -31,7 +31,8 @@ app.use('/contact',contact);
 
 app.use('*',function(request,response,next){
      //response.json({"message":"The usl requested is not found","code":404,"success":false});
-     console.log("\n\n\nThis is not a vali route\n\n\n");
+     console.log("\n\n\nThis is not a valid route\n\n\n");
+     console.log("/contact//send-email,/contact//send-email-otp,/contact/send-sms")
     next();
 })
 
