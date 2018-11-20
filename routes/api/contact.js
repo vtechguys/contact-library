@@ -349,10 +349,10 @@ router.post('/send-email-otp',(request,response)=>{
                 }
                 else{
                     if(!result){
-                        response.json({"message":"Unable To send mail otp","code":400,"success":false});
+                        response.json({"message":"Unable To send message","code":400,"success":false});
                     }
                     else{
-                        response.json({"message":"Successfully sent mail otp","code":200,"success":true});
+                        response.json({"message":"Successfully sent message","code":200,"success":true});
     
                     }
                 }
