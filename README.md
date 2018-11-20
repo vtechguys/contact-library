@@ -19,15 +19,15 @@ sends SMS type transaction using msg91
 
 ```
 type:transcational/promotional
-
+service:twillo/msg91
 
 `/contact/send-email`
 ```
 {
 	
-	"to":user@user.com,
-	"type":"promotionalOffer",//folloUps etc
-	"text":"utext matter",
+  "to":user@user.com,
+  "type":"promotionalOffer",//folloUps etc
+  "text":"utext matter",
   "bcc":[],
   "cc":[],
   "config":{
