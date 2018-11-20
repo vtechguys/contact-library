@@ -233,7 +233,7 @@ const validateSMS = function(object){
     if(!validate.smallString(object.type)){
         errors.type = 'Message type cannot be empty'
     }
-    const SMS_TYPES = [config.TYPE_PROMOTIONAL,config.TYPE_TRANSACTIONAL];
+    const SMS_TYPES = config.SMS_TYPES;
     if(SMS_TYPES.indexOf(object.type)=== -1){
         errors.type = 'Invalid Message Type'
     }

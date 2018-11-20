@@ -37,6 +37,6 @@ module.exports = {
         EXPIRES_IN : 10,
     
         TYPE_PROMOTIONAL : 'promotional',
-        TYPE_TRANSACTIONAL : 'transactional'    
-    
+        TYPE_TRANSACTIONAL : 'transactional' ,   
+        SMS_TYPES:['promotional','transactional']
 }
