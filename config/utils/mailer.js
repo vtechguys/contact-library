@@ -97,6 +97,7 @@ const mailer = {
 
     // send mail with defined transport object
         transporter.sendMail(mailOptions, function(error, info){
+            console.log("Mailing now...",error,info);
             if (error) {
                 console.log("seinfing mail error",error);
             }
