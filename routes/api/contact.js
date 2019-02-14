@@ -130,30 +130,30 @@ function validateEmailInfo(info){
 
         }
         
-        if(info.admin || info.admin===""){
+//         if(info.admin || info.admin===""){
             
-            if(!validate.email(info.admin)){
-                errors["Admin"] = "Admin filed is a invalid email";
-            }
+//             if(!validate.email(info.admin)){
+//                 errors["Admin"] = "Admin filed is a invalid email";
+//             }
 
-        }
-        else{
+//         }
+//         else{
             
-            errors["admin"] = "Admin field is required.";
+//             errors["admin"] = "Admin field is required.";
         
-        }
-        if(info.pass || info.pass===""){
+//         }
+//         if(info.pass || info.pass===""){
             
-            if(!validate.smallString(info.pass)){
-                errors["pass"] = "Admin Password filed is a invalid";
-            }
+//             if(!validate.smallString(info.pass)){
+//                 errors["pass"] = "Admin Password filed is a invalid";
+//             }
 
-        }
-        else{
+//         }
+//         else{
             
-            errors["pass"] = "Admin Password field is required.";
+//             errors["pass"] = "Admin Password field is required.";
         
-        }
+//         }
 
         if(info.cc || info.cc===""){
             if(!validate.multipleMail(info.cc)){
@@ -167,22 +167,22 @@ function validateEmailInfo(info){
         }
 
        
-        if(info.config || info.config===""){
-            console.log(typeof(info.config)==="object",Object.keys(info.config)>0,info.config)
-            if((typeof(info.config)==="object" && Object.keys(info.config)>0)){
-                errors["config"]="Config field invalid";
-            }
-        }
-        else{
-            errors["config"]="Config field is required";
-        }
+//         if(info.config || info.config===""){
+//             console.log(typeof(info.config)==="object",Object.keys(info.config)>0,info.config)
+//             if((typeof(info.config)==="object" && Object.keys(info.config)>0)){
+//                 errors["config"]="Config field invalid";
+//             }
+//         }
+//         else{
+//             errors["config"]="Config field is required";
+//         }
 
     }
     else{
         errors["to"] = "To field is required.";
         errors["type"]="Type filed is required",
-        errors["admin"]="Admin field is required";
-        errors["config"]="Config field is required";
+//         errors["admin"]="Admin field is required";
+//         errors["config"]="Config field is required";
         
     }
 
@@ -245,7 +245,7 @@ const validateSMS = function(object){
   }
 //send email normal without accessing specific data.Common Bulk Msg sending
 router.post('/send-email',(request,response)=>{
-    let body = _.pick(request.body,["to","subject","text","type","admin","pass","config","cc","bcc"]);
+    let body = _.pick(request.body,["to","subject","text","type","cc","bcc"]);
     const { errors,isValid } = validateEmailInfo( request.body );
 
     console.log(body);
