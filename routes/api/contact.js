@@ -256,7 +256,7 @@ router.post('/send-email',(request,response)=>{
     }
     else{
 
-        if( authenticate(body.admin,body.pass) ){//this sholud later be findDB authorised user authentication here after RBAC
+//         if( authenticate(body.admin,body.pass) ){//this sholud later be findDB authorised user authentication here after RBAC
             
             dbOperations.sendEmail(body,(error,result)=>{
                 if(error){
@@ -275,11 +275,11 @@ router.post('/send-email',(request,response)=>{
             });
 
 
-        }
-        else{
-            response.json({"message":"unauthorized","code":401,"success":false});
-        }
-
+        
+// }
+//         else{
+//             response.json({"message":"unauthorized","code":401,"success":false});
+//         }
 
 
         
