@@ -180,7 +180,7 @@ function validateEmailInfo(info){
     }
     else{
         errors["to"] = "To field is required.";
-        errors["type"]="Type filed is required",
+        errors["type"]="Type filed is required";
 //         errors["admin"]="Admin field is required";
 //         errors["config"]="Config field is required";
         
